@@ -3,7 +3,7 @@ from settings_window import SettingsWindow
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import urllib.request
-from tkinter import TclError, Tk, Label, Button
+from tkinter import StringVar, TclError, Label, Button, Entry
 from PIL import ImageTk, Image
 
 scope = "user-read-currently-playing"
@@ -28,6 +28,9 @@ def update_img():
 def on_closing():
     app.destroy()
 
+def printURL():
+    print(authenticationLink.get())
+
 #APP INITIATION
 app = SettingsWindow()
 app.geometry("400x300")
@@ -38,6 +41,9 @@ app.title("App")
 app.resizable(False, False)
 toggleBind = Button(app, text= "Bind to front", command=bindTop, bg="#1ccc5b", fg="black").pack(pady= 20)
 toggleUnbind = Button(app, text= "Unbind to front", command=unbindTop, bg="#1ccc5b", fg="black").pack(pady= 20)
+authenticationLink = Entry(app, width=30)
+authenticationLink.pack(pady=20)
+enterButton = Button(app, text= "Enter", command=printURL, bg="#1ccc5b", fg="black").pack(pady= 20)
 app.protocol("WM_DELETE_WINDOW", on_closing)
 
 #DISPLAY INITIATION
