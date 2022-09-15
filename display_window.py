@@ -53,7 +53,7 @@ class DisplayWindow(Toplevel):
 class SettingsWindow(Tk):
 
     linkEntered = None
-    authenicationLink = None
+    authenticationLink = None
     enterButton = None
     toggleBind = None
     toggleUnbind = None
@@ -75,7 +75,7 @@ class SettingsWindow(Tk):
         #self.toggleUnbind = Button(self, text= "Unbind to front", command=self.unbindTop).pack(pady= 20)
         self.linkEntered = StringVar() #Variable to determine whether the enter button was pressed or not
         self.authenticationLink = Entry(self, width=30)
-        self.authenticationLink.pack(pady=20)
+        self.authenticationLink.pack()
         self.enterButton = Button(self, text= "Enter", command=lambda: self.linkEntered.set("entered"))
         self.enterButton.pack()
 
@@ -92,7 +92,12 @@ class SettingsWindow(Tk):
         self.authentication_label.config(text="Registered")
     
     def setUnregistered(self):
-        self.authentication_label.config(text="Unregistered")
+        self.authentication_label.config(
+            text="""Unregistered\n
+            After signing in, you will be redirected.\n
+            Please copy and paste the redirected URL here to\n
+            register the app with your spotify account"""
+            )
     
     def removeAuthentications(self):
         self.enterButton.destroy()
