@@ -1,10 +1,13 @@
-from tkinter import Toplevel, Tk, Button, Entry, StringVar
+
+from tkinter import Toplevel, Tk, Button, Entry, StringVar, Label
 import os.path
+from PIL import ImageTk, Image
 
 class DisplayWindow(Toplevel):
-    """
-    CLASS FOR IMAGE WINDOW TO ALLOW FOR BORDLERLESS DRAGABLE FRAME
-    """
+    
+    img = ""
+    panel = None
+
     def __init__(self,master=None):
         Toplevel.__init__(self,master)
         self.overrideredirect(True)
@@ -12,6 +15,13 @@ class DisplayWindow(Toplevel):
         self._offsety = 0
         self.bind('<Button-1>',self.clickwin)
         self.bind('<B1-Motion>',self.dragwin)
+
+        self.geometry("300x300")
+        self.maxsize(300,300)
+        self.attributes("-topmost", False)
+        self.initiateImage()
+        self.panel = Label(self, image = self.img)
+        self.panel.pack(side = "bottom", fill = "both", expand = "yes")
 
     def dragwin(self,event):
         x = self.winfo_pointerx() - self._offsetx
@@ -28,6 +38,17 @@ class DisplayWindow(Toplevel):
     def setUnbindTop(self):
         self.attributes("-topmost", False)
 
+    def update_img(self):
+        self.img = ImageTk.PhotoImage(Image.open("art.png"))
+        self.panel.configure(image=self.img)
+        self.panel.image = self.img
+
+    def initiateImage(self):
+        try:
+            self.img = ImageTk.PhotoImage(Image.open("art.png"))
+        except:
+            self.img = ""
+    
 
 class SettingsWindow(Tk):
 
@@ -36,6 +57,7 @@ class SettingsWindow(Tk):
     enterButton = None
     toggleBind = None
     toggleUnbind = None
+    authentication_label = None
 
     def __init__(self) -> None:
         super().__init__()
@@ -45,18 +67,33 @@ class SettingsWindow(Tk):
         self.eval('tk::PlaceWindow . center')
         self.title("App")
         self.resizable(False, False)
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+        self.authentication_label = Label(self, text="")
+        self.authentication_label.pack()
 
-        self.toggleBind = Button(self, text= "Bind to front", command=DisplayWindow.setBindTop).pack(pady= 20)
-        self.toggleUnbind = Button(self, text= "Unbind to front", command=DisplayWindow.setUnbindTop).pack(pady= 20)
+        #self.toggleBind = Button(self, text= "Bind to front", command=self.bindTop).pack(pady= 20)
+        #self.toggleUnbind = Button(self, text= "Unbind to front", command=self.unbindTop).pack(pady= 20)
         self.linkEntered = StringVar() #Variable to determine whether the enter button was pressed or not
         self.authenticationLink = Entry(self, width=30)
         self.authenticationLink.pack(pady=20)
         self.enterButton = Button(self, text= "Enter", command=lambda: self.linkEntered.set("entered"))
-        self.enterButton.pack(pady= 20)
+        self.enterButton.pack()
 
     def getLinkInput(self):
         if not os.path.exists(".cache"):
             self.enterButton.wait_variable(self.linkEntered)
             link = self.authenticationLink.get()
             return link
+    
+    def on_closing(self):
+        self.destroy()
 
+    def setRegistered(self):
+        self.authentication_label.config(text="Registered")
+    
+    def setUnregistered(self):
+        self.authentication_label.config(text="Unregistered")
+    
+    def removeAuthentications(self):
+        self.enterButton.destroy()
+        self.authenticationLink.pack_forget()
