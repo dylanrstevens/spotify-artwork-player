@@ -1,4 +1,5 @@
-from tkinter import Toplevel
+from tkinter import Toplevel, Tk, Button, Entry, StringVar
+import os.path
 
 class DisplayWindow(Toplevel):
     """
@@ -20,3 +21,42 @@ class DisplayWindow(Toplevel):
     def clickwin(self,event):
         self._offsetx = event.x
         self._offsety = event.y
+
+    def setBindTop(self):
+        self.attributes("-topmost", True)
+    
+    def setUnbindTop(self):
+        self.attributes("-topmost", False)
+
+
+class SettingsWindow(Tk):
+
+    linkEntered = None
+    authenicationLink = None
+    enterButton = None
+    toggleBind = None
+    toggleUnbind = None
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.geometry("400x300")
+        #self['background']="black"
+        self.iconbitmap('./icon256.ico')
+        self.eval('tk::PlaceWindow . center')
+        self.title("App")
+        self.resizable(False, False)
+
+        self.toggleBind = Button(self, text= "Bind to front", command=DisplayWindow.setBindTop).pack(pady= 20)
+        self.toggleUnbind = Button(self, text= "Unbind to front", command=DisplayWindow.setUnbindTop).pack(pady= 20)
+        self.linkEntered = StringVar() #Variable to determine whether the enter button was pressed or not
+        self.authenticationLink = Entry(self, width=30)
+        self.authenticationLink.pack(pady=20)
+        self.enterButton = Button(self, text= "Enter", command=lambda: self.linkEntered.set("entered"))
+        self.enterButton.pack(pady= 20)
+
+    def getLinkInput(self):
+        if not os.path.exists(".cache"):
+            self.enterButton.wait_variable(self.linkEntered)
+            link = self.authenticationLink.get()
+            return link
+
