@@ -94,9 +94,9 @@ class SettingsWindow(Tk):
     def setUnregistered(self):
         self.authentication_label.config(
             text="""Unregistered\n
-            After signing in, you will be redirected.\n
-            Please copy and paste the redirected URL here to\n
-            register the app with your spotify account"""
+After signing in, you will be redirected to 'localhost'.\n
+Please copy the redirected URL from your browser and paste\n
+it here to register the app with your spotify account"""
             )
     
     def removeAuthentications(self):
