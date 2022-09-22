@@ -1,6 +1,7 @@
 from os import link
 import os.path
-from display_window import DisplayWindow, SettingsWindow
+from display_window import DisplayWindow
+from settings_window import SettingsApp, AuthenticatePage, HomePage
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import urllib.request
@@ -10,12 +11,9 @@ from PIL import ImageTk, Image
 def main():
     
     
-    app = SettingsWindow()
-    #print(app.getLinkInput())
-    if os.path.exists(".cache"):
-        app.setRegistered()
-    else:
-        app.setUnregistered()
+    app = SettingsApp()
+    #print(app.frames[AuthenticatePage].getLinkInput())
+    
     
     scope = "user-read-currently-playing"
     spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, instance=app))
@@ -24,12 +22,15 @@ def main():
     except:
         current_image = ""
     
-    display = DisplayWindow()
-    toggleBind = Button(app, text= "Bind to front", command=display.setBindTop).pack()
-    toggleUnbind = Button(app, text= "Unbind to front", command=display.setUnbindTop).pack()
+    app.frames[HomePage].setRegistered()
 
-    app.setRegistered()
-    app.removeAuthentications()
+    display = DisplayWindow()
+    
+    if (app.frames[HomePage].registeredBool == True):
+        toggleBind = Button(app.frames[HomePage], text= "Bind to front", command=display.setBindTop)
+        toggleBind.grid(row=2, column=0)
+        toggleUnbind = Button(app.frames[HomePage], text= "Unbind to front", command=display.setUnbindTop)
+        toggleUnbind.grid(row=3, column=0)
 
     #APP & DISPLAY LOOP TO GET ALBUM COVER EVERY TIME SONG CHANGES
     last_song = ""

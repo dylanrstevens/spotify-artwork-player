@@ -49,20 +49,17 @@ class DisplayWindow(Toplevel):
         except:
             self.img = ""
     
-
+"""
 class SettingsWindow(Tk):
 
     linkEntered = None
     authenticationLink = None
     enterButton = None
-    toggleBind = None
-    toggleUnbind = None
     authentication_label = None
 
     def __init__(self) -> None:
         super().__init__()
         self.geometry("400x300")
-        #self['background']="black"
         self.iconbitmap('./icon256.ico')
         self.eval('tk::PlaceWindow . center')
         self.title("App")
@@ -71,8 +68,6 @@ class SettingsWindow(Tk):
         self.authentication_label = Label(self, text="")
         self.authentication_label.pack()
 
-        #self.toggleBind = Button(self, text= "Bind to front", command=self.bindTop).pack(pady= 20)
-        #self.toggleUnbind = Button(self, text= "Unbind to front", command=self.unbindTop).pack(pady= 20)
         self.linkEntered = StringVar() #Variable to determine whether the enter button was pressed or not
         self.authenticationLink = Entry(self, width=30)
         self.authenticationLink.pack()
@@ -93,12 +88,10 @@ class SettingsWindow(Tk):
     
     def setUnregistered(self):
         self.authentication_label.config(
-            text="""Unregistered\n
-After signing in, you will be redirected to 'localhost'.\n
-Please copy the redirected URL from your browser and paste\n
-it here to register the app with your spotify account"""
-            )
+            text='')
     
     def removeAuthentications(self):
         self.enterButton.destroy()
         self.authenticationLink.pack_forget()
+
+"""
