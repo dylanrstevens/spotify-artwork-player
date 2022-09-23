@@ -14,7 +14,7 @@ class SettingsApp(Tk):
         container.pack(side = "top", fill = "both", expand = True)
         container.grid_rowconfigure(0, weight = 1)
         container.grid_columnconfigure(0, weight = 1)
-        self.geometry("400x300")
+        self.geometry("300x225")
         self.iconbitmap('./icon256.ico')
         self.eval('tk::PlaceWindow . center')
         self.title("App")
@@ -52,18 +52,18 @@ class AuthenticatePage(Frame):
         Frame.__init__(self, parent)
         title = Label(self, text ="Authentication")
         description = Label(self, text ="After signing in with the opened browser,\ncopy and paste the redirected link below")
-        title.grid(row = 0, column = 0)
+        title.grid(row = 2, column = 0)
         description.grid(row=1, column=0)
 
         self.linkEntered = StringVar() #Variable to determine whether the enter button was pressed or not
         self.authenticationLink = Entry(self, width=30)
-        self.authenticationLink.grid(row=2, column=0)
+        self.authenticationLink.grid(row=3, column=0)
         self.enterButton = Button(self, text= "Enter", command=lambda: self.linkEntered.set("entered"))
-        self.enterButton.grid(row=3, column=0)
+        self.enterButton.grid(row=4, column=0)
 
         button1 = Button(self, text ="Settings",
             command = lambda : controller.show_frame(HomePage))
-        button1.grid(row = 4, column = 0)
+        button1.grid(row = 0, column = 0)
 
     
     def getLinkInput(self):
@@ -82,15 +82,15 @@ class HomePage(Frame):
     def __init__(self, parent, controller): 
         Frame.__init__(self, parent)
         self.RegistrationStatus = Label(self, text="")
-        self.RegistrationStatus.grid(row=0, column= 1)
+        self.RegistrationStatus.grid(row=1, column= 1)
         self.registeredBool = False
 
         label = Label(self, text ="Settings")
-        label.grid(row = 0, column = 0)
+        label.grid(row = 1, column = 0)
 
         button1 = Button(self, text ="Authenticate",
                             command = lambda : controller.show_frame(AuthenticatePage))
-        button1.grid(row = 1, column = 0)
+        button1.grid(row = 0, column = 0)
 
         if os.path.exists(".cache"):
             self.setRegistered()
@@ -102,7 +102,7 @@ class HomePage(Frame):
         self.registeredBool = True
     
     def setUnregistered(self):
-        self.RegistrationStatus.config(text="Status: Unregistered, please follow\ninstructions by clicking the 'Authenticate' button")
+        self.RegistrationStatus.config(text="Status: Unregistered, please\nfollow the instructions by\nclicking the 'Authenticate' button")
         self.registeredBool = False
 
 
