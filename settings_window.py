@@ -1,7 +1,11 @@
 import time
 from tkinter import Frame, TclError, Tk, Button, Entry, StringVar, Label
 import os.path
+from tkinter.font import BOLD
 from PIL import ImageTk, Image
+
+FONT = ("Verdana", 10)
+TITLE_FONT = ("Verdana", 12, BOLD)
   
 class SettingsApp(Tk):
 
@@ -14,7 +18,7 @@ class SettingsApp(Tk):
         container.pack(side = "top", fill = "both", expand = True)
         container.grid_rowconfigure(0, weight = 1)
         container.grid_columnconfigure(0, weight = 1)
-        self.geometry("300x225")
+        self.geometry("320x225")
         self.iconbitmap('./icon256.ico')
         self.eval('tk::PlaceWindow . center')
         self.title("App")
@@ -50,20 +54,30 @@ class AuthenticatePage(Frame):
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
-        title = Label(self, text ="Authentication")
-        description = Label(self, text ="After signing in with the opened browser,\ncopy and paste the redirected link below")
-        title.grid(row = 2, column = 0)
-        description.grid(row=1, column=0)
+        title = Label(self, text ="Authentication", font=TITLE_FONT)
+        description = Label(self, text ="After signing in with the opened browser,\ncopy and paste the redirected link below", anchor="w", justify="left")
+        title.grid(row = 1, column = 0, columnspan=4, sticky="W", pady=10)
+        description.grid(row=2, column=0, columnspan=4, sticky="W")
 
         self.linkEntered = StringVar() #Variable to determine whether the enter button was pressed or not
         self.authenticationLink = Entry(self, width=30)
-        self.authenticationLink.grid(row=3, column=0)
+        self.authenticationLink.grid(row=3, column=0, columnspan=4, sticky="W")
         self.enterButton = Button(self, text= "Enter", command=lambda: self.linkEntered.set("entered"))
-        self.enterButton.grid(row=4, column=0)
+        self.enterButton.grid(row=4, column=0, columnspan=4, sticky="W")
 
-        button1 = Button(self, text ="Settings",
-            command = lambda : controller.show_frame(HomePage))
-        button1.grid(row = 0, column = 0)
+        settings_button = Button(self, text ="Settings",
+            command = lambda : controller.show_frame(HomePage), font=FONT)
+        settings_button.grid(row = 0, column = 0, sticky="W")
+
+        authenticate_button = Button(self, text ="Authenticate",
+            command = lambda : controller.show_frame(AuthenticatePage), font=FONT)
+        authenticate_button.grid(row = 0, column = 1, sticky="W")
+
+        instructions_button = Button(self, text ="Instructions", font=FONT)
+        instructions_button.grid(row = 0, column = 2, sticky="W")
+
+        help_button = Button(self, text ="Help", font=FONT)
+        help_button.grid(row = 0, column = 3, sticky="W")
 
     
     def getLinkInput(self):
@@ -81,16 +95,28 @@ class HomePage(Frame):
 
     def __init__(self, parent, controller): 
         Frame.__init__(self, parent)
-        self.RegistrationStatus = Label(self, text="")
-        self.RegistrationStatus.grid(row=1, column= 1)
+        self.RegistrationStatus = Label(self, text="", anchor="w", justify="left")
+        self.RegistrationStatus.grid(row=4, column= 0, columnspan=4, sticky="W", pady=(50, 10))
         self.registeredBool = False
 
-        label = Label(self, text ="Settings")
-        label.grid(row = 1, column = 0)
+        title = Label(self, text ="Settings", font=TITLE_FONT)
+        title.grid(row = 1, column = 0, columnspan=2, sticky="W", pady=10)
 
-        button1 = Button(self, text ="Authenticate",
-                            command = lambda : controller.show_frame(AuthenticatePage))
-        button1.grid(row = 0, column = 0)
+        settings_button = Button(self, text ="Settings",
+            command = lambda : controller.show_frame(HomePage), font=FONT)
+        settings_button.grid(row = 0, column = 0, sticky="W")
+
+        authenticate_button = Button(self, text ="Authenticate",
+                            command = lambda : controller.show_frame(AuthenticatePage), font=FONT)
+        authenticate_button.grid(row = 0, column = 1, sticky="W")
+
+        instructions_button = Button(self, text ="Instructions", font=FONT)
+        instructions_button.grid(row = 0, column = 2, sticky="W")
+
+        help_button = Button(self, text ="Help", font=FONT)
+        help_button.grid(row = 0, column = 3, sticky="W")
+
+
 
         if os.path.exists(".cache"):
             self.setRegistered()
@@ -102,7 +128,7 @@ class HomePage(Frame):
         self.registeredBool = True
     
     def setUnregistered(self):
-        self.RegistrationStatus.config(text="Status: Unregistered, please\nfollow the instructions by\nclicking the 'Authenticate' button")
+        self.RegistrationStatus.config(text="Status: Unregistered, please follow the instructions\nby clicking the 'Authenticate' button")
         self.registeredBool = False
 
 

@@ -4,7 +4,7 @@ from settings_window import SettingsApp, AuthenticatePage, HomePage
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import urllib.request
-from tkinter import TclError, Button
+from tkinter import TclError, Button, W
 from PIL import ImageTk, Image
 
 def main():
@@ -27,9 +27,9 @@ def main():
     
     if (app.frames[HomePage].registeredBool == True):
         toggleBind = Button(app.frames[HomePage], text= "Bind to front", command=display.setBindTop)
-        toggleBind.grid(row=2, column=0)
+        toggleBind.grid(row=2, column=0, columnspan=2, sticky=W)
         toggleUnbind = Button(app.frames[HomePage], text= "Unbind to front", command=display.setUnbindTop)
-        toggleUnbind.grid(row=3, column=0)
+        toggleUnbind.grid(row=3, column=0, columnspan=2, sticky=W)
 
     #APP & DISPLAY LOOP TO GET ALBUM COVER EVERY TIME SONG CHANGES
     last_song = ""
