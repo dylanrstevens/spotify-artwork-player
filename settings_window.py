@@ -1,14 +1,15 @@
 import time
-from tkinter import Frame, Tk, Button, Entry, StringVar, Label
+from tkinter import Frame, TclError, Tk, Button, Entry, StringVar, Label
 import os.path
 from PIL import ImageTk, Image
   
 class SettingsApp(Tk):
-    
-    TestVar = None
+
+    RUNNING_LOOP = None
 
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
+        self.RUNNING_LOOP = True
         container = Frame(self) 
         container.pack(side = "top", fill = "both", expand = True)
         container.grid_rowconfigure(0, weight = 1)
@@ -37,6 +38,7 @@ class SettingsApp(Tk):
     
     def on_closing(self):
         self.destroy()
+        self.RUNNING_LOOP = False
 
 
 class AuthenticatePage(Frame):
