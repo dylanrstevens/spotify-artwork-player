@@ -21,18 +21,19 @@ class SettingsApp(Tk):
         self.geometry("320x225")
         self.iconbitmap('./icon256.ico')
         self.eval('tk::PlaceWindow . center')
-        self.title("App")
+        self.title("Spotify Artwork Player")
         self.resizable(False, False)
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
-
 
         self.frames = {} 
 
         self.frames[HomePage] = HomePage(parent=container, controller=self)
         self.frames[AuthenticatePage] = AuthenticatePage(parent=container, controller=self)
+        self.frames[InstructionsPage] = InstructionsPage(parent=container, controller=self)
 
         self.frames[HomePage].grid(row=0, column=0, sticky="nsew")
         self.frames[AuthenticatePage].grid(row=0, column=0, sticky="nsew")
+        self.frames[InstructionsPage].grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(HomePage)
 
@@ -73,7 +74,8 @@ class AuthenticatePage(Frame):
             command = lambda : controller.show_frame(AuthenticatePage), font=FONT)
         authenticate_button.grid(row = 0, column = 1, sticky="W")
 
-        instructions_button = Button(self, text ="Instructions", font=FONT)
+        instructions_button = Button(self, text ="Instructions", 
+            command = lambda : controller.show_frame(InstructionsPage), font=FONT)
         instructions_button.grid(row = 0, column = 2, sticky="W")
 
         help_button = Button(self, text ="Help", font=FONT)
@@ -86,7 +88,6 @@ class AuthenticatePage(Frame):
             link = self.authenticationLink.get()
             return link
 
-  
 
 class HomePage(Frame):
      
@@ -107,16 +108,15 @@ class HomePage(Frame):
         settings_button.grid(row = 0, column = 0, sticky="W")
 
         authenticate_button = Button(self, text ="Authenticate",
-                            command = lambda : controller.show_frame(AuthenticatePage), font=FONT)
+            command = lambda : controller.show_frame(AuthenticatePage), font=FONT)
         authenticate_button.grid(row = 0, column = 1, sticky="W")
 
-        instructions_button = Button(self, text ="Instructions", font=FONT)
+        instructions_button = Button(self, text ="Instructions", 
+            command = lambda : controller.show_frame(InstructionsPage), font=FONT)
         instructions_button.grid(row = 0, column = 2, sticky="W")
 
         help_button = Button(self, text ="Help", font=FONT)
         help_button.grid(row = 0, column = 3, sticky="W")
-
-
 
         if os.path.exists(".cache"):
             self.setRegistered()
@@ -132,5 +132,25 @@ class HomePage(Frame):
         self.registeredBool = False
 
 
-#app = SettingsApp()
-#app.mainloop()
+class InstructionsPage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+
+        title = Label(self, text ="Instructions", font=TITLE_FONT)
+        title.grid(row = 1, column = 0, columnspan=2, sticky="W", pady=10)
+
+        settings_button = Button(self, text ="Settings",
+            command = lambda : controller.show_frame(HomePage), font=FONT)
+        settings_button.grid(row = 0, column = 0, sticky="W")
+
+        authenticate_button = Button(self, text ="Authenticate",
+            command = lambda : controller.show_frame(AuthenticatePage), font=FONT)
+        authenticate_button.grid(row = 0, column = 1, sticky="W")
+
+        instructions_button = Button(self, text ="Instructions", 
+            command = lambda : controller.show_frame(InstructionsPage), font=FONT)
+        instructions_button.grid(row = 0, column = 2, sticky="W")
+
+        help_button = Button(self, text ="Help", font=FONT)
+        help_button.grid(row = 0, column = 3, sticky="W")
