@@ -1,8 +1,6 @@
-import time
-from tkinter import Frame, TclError, Tk, Button, Entry, StringVar, Label
+from tkinter import Frame, TclError, Tk, Button, Entry, StringVar, Label, IntVar
 import os.path
 from tkinter.font import BOLD
-from PIL import ImageTk, Image
 
 FONT = ("Verdana", 10)
 TITLE_FONT = ("Verdana", 12, BOLD)
@@ -52,19 +50,28 @@ class AuthenticatePage(Frame):
     authenticationLink = None
     enterButton = None
     authentication_label = None
+    loginButton = None
+    login_clicked = None
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
         title = Label(self, text ="Authentication", font=TITLE_FONT)
         description = Label(self, text ="After signing in with the opened browser,\ncopy and paste the redirected link below", anchor="w", justify="left")
         title.grid(row = 1, column = 0, columnspan=4, sticky="W", pady=10)
-        description.grid(row=2, column=0, columnspan=4, sticky="W")
+        description.grid(row=3, column=0, columnspan=4, sticky="W")
 
         self.linkEntered = StringVar() #Variable to determine whether the enter button was pressed or not
         self.authenticationLink = Entry(self, width=30)
-        self.authenticationLink.grid(row=3, column=0, columnspan=4, sticky="W")
-        self.enterButton = Button(self, text= "Enter", command=lambda: self.linkEntered.set("entered"))
-        self.enterButton.grid(row=4, column=0, columnspan=4, sticky="W")
+        self.authenticationLink.grid(row=4, column=0, columnspan=4, sticky="W")
+
+        self.enterButton = Button(self, text= "Enter",
+            command=lambda: self.linkEntered.set("entered"))
+        self.enterButton.grid(row=5, column=0, columnspan=4, sticky="W")
+
+        self.login_clicked = IntVar()
+        self.loginButton = Button(self, text="Log In",
+            command=lambda: self.login_clicked.set(1))
+        self.loginButton.grid(row=2, column=0, columnspan=4, sticky="W")
 
         settings_button = Button(self, text ="Settings",
             command = lambda : controller.show_frame(HomePage), font=FONT)

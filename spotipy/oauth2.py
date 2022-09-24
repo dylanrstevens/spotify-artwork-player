@@ -443,6 +443,7 @@ class SpotifyOAuth(SpotifyAuthBase):
 
     def _get_auth_response_interactive(self, open_browser=False):
         if open_browser:
+            self.instance.frames[AuthenticatePage].loginButton.wait_variable(self.instance.frames[AuthenticatePage].login_clicked)
             self._open_auth_url()
             prompt = "Enter the URL you were redirected to: "
         else:
