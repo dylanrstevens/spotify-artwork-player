@@ -28,10 +28,14 @@ class SettingsApp(Tk):
         self.frames[HomePage] = HomePage(parent=container, controller=self)
         self.frames[AuthenticatePage] = AuthenticatePage(parent=container, controller=self)
         self.frames[InstructionsPage] = InstructionsPage(parent=container, controller=self)
+        self.frames[HowToAuthenticate] = HowToAuthenticate(parent=container, controller=self)
+        self.frames[HowToUse] = HowToUse(parent=container, controller=self)
 
         self.frames[HomePage].grid(row=0, column=0, sticky="nsew")
         self.frames[AuthenticatePage].grid(row=0, column=0, sticky="nsew")
         self.frames[InstructionsPage].grid(row=0, column=0, sticky="nsew")
+        self.frames[HowToAuthenticate].grid(row=0, column=0, sticky="nsew")
+        self.frames[HowToUse].grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(HomePage)
 
@@ -161,3 +165,63 @@ class InstructionsPage(Frame):
 
         help_button = Button(self, text ="Help", font=FONT)
         help_button.grid(row = 0, column = 3, sticky="W")
+
+        how_to_authenticate = Button(self, text="How to register",
+            command = lambda : controller.show_frame(HowToAuthenticate))
+        how_to_authenticate.grid(row=2, column=0, columnspan=2, sticky="W")
+
+        how_to_use = Button(self, text="How to use",
+            command = lambda : controller.show_frame(HowToUse))
+        how_to_use.grid(row=3, column=0, columnspan=2, sticky="W")
+
+
+class HowToAuthenticate(Frame):
+
+    def __init__(self, parent, controller):
+        
+        Frame.__init__(self, parent)
+
+        title = Label(self, text ="How To Register", font=TITLE_FONT)
+        title.grid(row = 0, column = 0, columnspan=1, sticky="W")
+
+        description = Label(self, text=
+"""In order to use the Spotify Artwork Player, you must
+register the app with your spotify account. This is required
+in order to read your currently playing song.
+
+1. Click 'Authenticate' and begin by clicking 'Log in'
+2. Log into spotify, using the opened webbrowser page
+3. After approving the app to read your current song
+data, you will be redirected to 'localhost'.
+4. Copy the entire URL of this page, paste into the
+text input, and hit enter.""", anchor="w", justify="left")
+        description.grid(row=1, column=0, columnspan=4, sticky="W")
+
+        back_button = Button(self, text="Back",
+            command = lambda : controller.show_frame(InstructionsPage))
+        back_button.grid(row=2, column=0, sticky="W", pady=2)
+
+class HowToUse(Frame):
+
+    def __init__(self, parent, controller):
+        
+        Frame.__init__(self, parent)
+
+        title = Label(self, text ="How To Use", font=TITLE_FONT)
+        title.grid(row = 0, column = 0, columnspan=1, sticky="W")
+
+        description = Label(self, text=
+"""After registering the app, you will see a blank square
+open on your screen. Begin by opening up spotify, playing
+a song, and the album cover of that song will appear.
+
+1.'Bind to front' will place the album cover ontop of all 
+other windows.
+2. 'Unbind to front' will give priority to other windows.
+3. Move the album cover around by clicking on it and 
+dragging it accross your screen.""", anchor="w", justify="left")
+        description.grid(row=1, column=0, columnspan=4, sticky="W")
+
+        back_button = Button(self, text="Back",
+            command = lambda : controller.show_frame(InstructionsPage))
+        back_button.grid(row=2, column=0, sticky="W", pady=2)
