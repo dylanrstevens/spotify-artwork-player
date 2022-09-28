@@ -6,6 +6,7 @@ from spotipy.oauth2 import SpotifyOAuth
 import urllib.request
 from tkinter import TclError, Button, W
 from PIL import ImageTk, Image
+from envvars import client_id, client_secret, redirect_uri
 
 def main():
     
@@ -15,7 +16,7 @@ def main():
     
     
     scope = "user-read-currently-playing"
-    spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, instance=app))
+    spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, instance=app))
     try:
         current_image = spotify.current_user_playing_track()["item"]["album"]["images"][1]["url"]
     except:
