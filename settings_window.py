@@ -1,6 +1,8 @@
-from tkinter import Frame, TclError, Tk, Button, Entry, StringVar, Label, IntVar
+from tkinter import Frame, Tk, Button, Entry, StringVar, Label, IntVar
 import os.path
+from os import path
 from tkinter.font import BOLD
+import webbrowser
 
 FONT = ("Verdana", 10)
 TITLE_FONT = ("Verdana", 12, BOLD)
@@ -16,7 +18,7 @@ class SettingsApp(Tk):
         container.pack(side = "top", fill = "both", expand = True)
         container.grid_rowconfigure(0, weight = 1)
         container.grid_columnconfigure(0, weight = 1)
-        self.geometry("320x225")
+        self.geometry("325x300")
         self.iconbitmap('./icon256.ico')
         self.eval('tk::PlaceWindow . center')
         self.title("Spotify Artwork Player")
@@ -30,12 +32,14 @@ class SettingsApp(Tk):
         self.frames[InstructionsPage] = InstructionsPage(parent=container, controller=self)
         self.frames[HowToAuthenticate] = HowToAuthenticate(parent=container, controller=self)
         self.frames[HowToUse] = HowToUse(parent=container, controller=self)
+        self.frames[HelpPage] = HelpPage(parent=container, controller=self)
 
         self.frames[HomePage].grid(row=0, column=0, sticky="nsew")
         self.frames[AuthenticatePage].grid(row=0, column=0, sticky="nsew")
         self.frames[InstructionsPage].grid(row=0, column=0, sticky="nsew")
         self.frames[HowToAuthenticate].grid(row=0, column=0, sticky="nsew")
         self.frames[HowToUse].grid(row=0, column=0, sticky="nsew")
+        self.frames[HelpPage].grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(HomePage)
 
@@ -45,6 +49,8 @@ class SettingsApp(Tk):
     
     def on_closing(self):
         self.destroy()
+        self.frames[AuthenticatePage].login_clicked.set(2) #2 Refers to app has been closed
+        self.frames[AuthenticatePage].linkEntered.set("app_closed")
         self.RUNNING_LOOP = False
 
 
@@ -74,7 +80,7 @@ class AuthenticatePage(Frame):
 
         self.login_clicked = IntVar()
         self.loginButton = Button(self, text="Log In",
-            command=lambda: self.login_clicked.set(1))
+            command=lambda: self.login_clicked.set(1)) #1 Refers to successful attempt
         self.loginButton.grid(row=2, column=0, columnspan=4, sticky="W")
 
         settings_button = Button(self, text ="Settings",
@@ -89,7 +95,8 @@ class AuthenticatePage(Frame):
             command = lambda : controller.show_frame(InstructionsPage), font=FONT)
         instructions_button.grid(row = 0, column = 2, sticky="W")
 
-        help_button = Button(self, text ="Help", font=FONT)
+        help_button = Button(self, text ="Help",
+            command = lambda : controller.show_frame(HelpPage), font=FONT)
         help_button.grid(row = 0, column = 3, sticky="W")
 
     
@@ -126,7 +133,8 @@ class HomePage(Frame):
             command = lambda : controller.show_frame(InstructionsPage), font=FONT)
         instructions_button.grid(row = 0, column = 2, sticky="W")
 
-        help_button = Button(self, text ="Help", font=FONT)
+        help_button = Button(self, text ="Help",
+            command = lambda : controller.show_frame(HelpPage), font=FONT)
         help_button.grid(row = 0, column = 3, sticky="W")
 
         if os.path.exists(".cache"):
@@ -163,7 +171,8 @@ class InstructionsPage(Frame):
             command = lambda : controller.show_frame(InstructionsPage), font=FONT)
         instructions_button.grid(row = 0, column = 2, sticky="W")
 
-        help_button = Button(self, text ="Help", font=FONT)
+        help_button = Button(self, text ="Help", 
+            command = lambda : controller.show_frame(HelpPage), font=FONT)
         help_button.grid(row = 0, column = 3, sticky="W")
 
         how_to_authenticate = Button(self, text="How to register",
@@ -225,3 +234,52 @@ dragging it accross your screen.""", anchor="w", justify="left")
         back_button = Button(self, text="Back",
             command = lambda : controller.show_frame(InstructionsPage))
         back_button.grid(row=2, column=0, sticky="W", pady=2)
+
+
+class HelpPage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+
+        title = Label(self, text ="Help", font=TITLE_FONT)
+        title.grid(row = 1, column = 0, columnspan=2, sticky="W", pady=10)
+        
+
+        settings_button = Button(self, text ="Settings",
+            command = lambda : controller.show_frame(HomePage), font=FONT)
+        settings_button.grid(row = 0, column = 0, sticky="W")
+
+        authenticate_button = Button(self, text ="Authenticate",
+            command = lambda : controller.show_frame(AuthenticatePage), font=FONT)
+        authenticate_button.grid(row = 0, column = 1, sticky="W")
+
+        instructions_button = Button(self, text ="Instructions", 
+            command = lambda : controller.show_frame(InstructionsPage), font=FONT)
+        instructions_button.grid(row = 0, column = 2, sticky="W")
+
+        help_button = Button(self, text ="Help",
+            command = lambda : controller.show_frame(HelpPage), font=FONT)
+        help_button.grid(row = 0, column = 3, sticky="W")
+
+        description = Label(self, text=
+"""Please try the following for troubleshooting.
+
+Open the system folder by clicking the 'Open system
+folder' button, delete the file titled '.cache'. Close
+the Spotify Artwork Player and re-open. You will have
+to sign into spotify again, and re-register your app.
+The most likely cause of the Spotify Artwork Player not
+working is a corrupted .cache file.
+
+If issues still persist, please submit a detailed
+description of the issue as a comment on the project
+GitHub repository.""", anchor="w", justify="left")
+        description.grid(row=2, column=0, columnspan=4, sticky="W")
+
+        authenticate_button = Button(self, text ="Open system folder",
+            command = lambda: webbrowser.open(path.realpath(".")))
+        authenticate_button.grid(row = 3, column = 0, columnspan=2)
+
+        authenticate_button = Button(self, text ="GitHub repository",
+            command = lambda: webbrowser.open("https://github.com/dylanrstevens/spotify-artwork-player/issues/3"))
+        authenticate_button.grid(row = 3, column = 2, columnspan=2)
