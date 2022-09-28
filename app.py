@@ -1,21 +1,18 @@
-from os import link
-import os.path
-from display_window import DisplayWindow, SettingsWindow
+from requests import ConnectionError
+from display_window import DisplayWindow
+from settings_window import SettingsApp, AuthenticatePage, HomePage
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import urllib.request
-from tkinter import Label, TclError, Button
+from tkinter import TclError, Button, W
 from PIL import ImageTk, Image
 
 def main():
     
     
-    app = SettingsWindow()
-    #print(app.getLinkInput())
-    if os.path.exists(".cache"):
-        app.setRegistered()
-    else:
-        app.setUnregistered()
+    app = SettingsApp()
+    #print(app.frames[AuthenticatePage].getLinkInput())
+    
     
     scope = "user-read-currently-playing"
     spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, instance=app))
@@ -24,22 +21,25 @@ def main():
     except:
         current_image = ""
     
-    display = DisplayWindow()
-    toggleBind = Button(app, text= "Bind to front", command=display.setBindTop).pack()
-    toggleUnbind = Button(app, text= "Unbind to front", command=display.setUnbindTop).pack()
+    app.frames[HomePage].setRegistered()
 
-    app.setRegistered()
-    app.removeAuthentications()
+    display = DisplayWindow()
+    
+    if (app.frames[HomePage].registeredBool == True):
+        toggleBind = Button(app.frames[HomePage], text= "Bind to front", command=display.setBindTop)
+        toggleBind.grid(row=2, column=0, columnspan=2, sticky=W)
+        toggleUnbind = Button(app.frames[HomePage], text= "Unbind to front", command=display.setUnbindTop)
+        toggleUnbind.grid(row=3, column=0, columnspan=2, sticky=W)
 
     #APP & DISPLAY LOOP TO GET ALBUM COVER EVERY TIME SONG CHANGES
     last_song = ""
-    LOOP_ACTIVE = True
-    while LOOP_ACTIVE:
+    while app.RUNNING_LOOP:
         try:
             #print("tried")
             app.update()
             display.update()
             current_image = spotify.current_user_playing_track()["item"]["album"]["images"][1]["url"]
+            
             current_song = current_image
             #print(current_image)
             if (last_song != current_song):
@@ -48,13 +48,16 @@ def main():
                 last_song = current_song
                 display.update_img()
         except TclError as ApplicationDestroyed:
-            LOOP_ACTIVE = False
-        except TypeError as NoSongFound:
             pass
-            #print(NoSongFound)
+        except TypeError as NoSongFound:
+            #! DOES NOT BREAK LOOP AS THIS ERROR WILL BE RAISED IN BETWEEN SONG SELECTIONS BRIEFLY
+            pass
+        except ConnectionError as NoConnectionEstablished:
+            #! THIS ERROR IS RAISED WHEN THERE IS NO CONNECTION TO INTERNET (HTTP CANNOT MAKE A CONNECTION)
+            pass
         except:
             pass
-            #print(e)
+            
 
 if __name__ == "__main__":
     main()
