@@ -3,3 +3,5 @@ dist/
 .cache
 art.png
 envvars.py
+app.spec
+Spotify-Artwork-Player-Installer.exe
