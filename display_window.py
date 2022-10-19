@@ -18,7 +18,7 @@ class DisplayWindow(Toplevel):
 
         self.geometry("300x300")
         self.maxsize(300,300)
-        self.attributes("-topmost", False)
+        self.attributes("-topmost", True)
         self.initiateImage()
         self.panel = Label(self, image = self.img)
         self.panel.pack(side = "bottom", fill = "both", expand = "yes")

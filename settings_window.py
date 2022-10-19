@@ -66,7 +66,7 @@ class AuthenticatePage(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
         title = Label(self, text ="Authentication", font=TITLE_FONT)
-        description = Label(self, text ="After signing in with the opened browser,\ncopy and paste the redirected link below", anchor="w", justify="left")
+        description = Label(self, text ="After signing in with the opened browser,\nyou will be redirected to a page called localhost.\n\nDon't be alarmed if you see 'This site can't be reached'.\nAll you need to do is copy the URL of\nthe redirected page, and paste below.", anchor="w", justify="left")
         title.grid(row = 1, column = 0, columnspan=4, sticky="W", pady=10)
         description.grid(row=3, column=0, columnspan=4, sticky="W")
 
@@ -147,7 +147,7 @@ class HomePage(Frame):
         self.registeredBool = True
     
     def setUnregistered(self):
-        self.RegistrationStatus.config(text="Status: Unregistered, please follow the instructions\nby clicking the 'Authenticate' button")
+        self.RegistrationStatus.config(text="Status: Unregistered, please follow the instructions\nby clicking the 'Authenticate' button.\n\nFor further details on how to get started,\nclick on the 'Instructions' page.")
         self.registeredBool = False
 
 
